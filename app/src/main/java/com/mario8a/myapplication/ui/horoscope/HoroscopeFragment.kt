@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mario8a.myapplication.databinding.FragmentHoroscopeBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HoroscopeFragment : Fragment() {
     private var _biding: FragmentHoroscopeBinding? = null
     private val binding get() = _biding!!

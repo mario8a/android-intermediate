@@ -10,7 +10,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.mario8a.myapplication.R
 import com.mario8a.myapplication.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+// Siempre hay que preparar las clases para que puedan ser inyectadas con la inyeccionde dependencias, se hace en todos los fragment
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityMainBinding
