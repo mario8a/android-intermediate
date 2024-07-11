@@ -10,7 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import com.mario8a.myapplication.databinding.FragmentHoroscopeBinding
+import com.mario8a.myapplication.ui.horoscope.adapter.HoroscopeAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -20,6 +22,7 @@ class HoroscopeFragment : Fragment() {
 
     //conectando el viewmodel con el fragment
     private val horoscopeViewModel by viewModels<HoroscopeViewModel>()
+    private lateinit var horoscopeAdapter:HoroscopeAdapter // Para mostrar en pantalla
 
     private var _biding: FragmentHoroscopeBinding? = null
     private val binding get() = _biding!!
@@ -31,7 +34,16 @@ class HoroscopeFragment : Fragment() {
     }
 
     private fun initUI() {
+        initList() // initRecyclerView
         initUIState()
+    }
+
+    private fun initList() {
+        horoscopeAdapter = HoroscopeAdapter()
+        binding.rvHoroscope.apply {
+            layoutManager = GridLayoutManager(context, 2)
+            adapter = horoscopeAdapter
+        }
     }
 
     private fun initUIState() {
@@ -42,6 +54,8 @@ class HoroscopeFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 horoscopeViewModel.horoscope.collect { // El collect es como decir enganchate a el
                     Log.i("Mario", it.toString())
+                    // CAMBIOS EN HOROSCOPE
+                    horoscopeAdapter.updateList(it)
                 }
             }
         }

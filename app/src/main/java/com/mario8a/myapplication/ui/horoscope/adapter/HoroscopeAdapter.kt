@@ -9,6 +9,12 @@ import com.mario8a.myapplication.domain.model.HoroscopeInfo
 
 class HoroscopeAdapter(private  var horoscopeList:List<HoroscopeInfo> = emptyList()):
     RecyclerView.Adapter<HoroscopeViewHolder>() {
+
+        fun updateList(list:List<HoroscopeInfo>) {
+            horoscopeList = list
+            notifyDataSetChanged()
+        }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HoroscopeViewHolder {
         // crea la instancia del viewHolder
         return HoroscopeViewHolder(
