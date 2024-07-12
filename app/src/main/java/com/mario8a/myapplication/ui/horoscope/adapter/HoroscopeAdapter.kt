@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mario8a.myapplication.R
 import com.mario8a.myapplication.domain.model.HoroscopeInfo
 
-class HoroscopeAdapter(private  var horoscopeList:List<HoroscopeInfo> = emptyList()):
+class HoroscopeAdapter(private  var horoscopeList:List<HoroscopeInfo> = emptyList(),
+    private val onItemSelected:(HoroscopeInfo) -> Unit ):
     RecyclerView.Adapter<HoroscopeViewHolder>() {
 
         fun updateList(list:List<HoroscopeInfo>) {
@@ -26,6 +27,6 @@ class HoroscopeAdapter(private  var horoscopeList:List<HoroscopeInfo> = emptyLis
 
     override fun onBindViewHolder(holder: HoroscopeViewHolder, position: Int) {
         // se encarga de decirle al viewHolder lo que tiene que pintar
-        holder.render(horoscopeList[position])
+        holder.render(horoscopeList[position], onItemSelected)
     }
 }
