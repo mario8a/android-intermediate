@@ -1,6 +1,7 @@
 package com.mario8a.myapplication.ui.horoscope.adapter
 
 import android.view.View
+import android.view.animation.LinearInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import com.mario8a.myapplication.databinding.ItemHoroscopeBinding
 import com.mario8a.myapplication.domain.model.HoroscopeInfo
@@ -14,6 +15,21 @@ class HoroscopeViewHolder(view: View): RecyclerView.ViewHolder(view) {
         binding.ivHoroscope.setImageResource(horoscopeInfo.img)
         binding.tvTitle.text = context.getString(horoscopeInfo.name)
 
-        binding.parent.setOnClickListener { onItemSelected(horoscopeInfo) }
+        binding.parent.setOnClickListener {
+            startRotationAnimation(binding.ivHoroscope, newLambda = {onItemSelected(horoscopeInfo)})
+        //    onItemSelected(horoscopeInfo)
+        }
+    }
+
+    private fun startRotationAnimation(view:View, newLambda:() -> Unit) {
+        view.animate().apply {
+            duration = 500
+            interpolator = LinearInterpolator()
+            rotationBy(360f)
+            withEndAction {
+                newLambda()
+            }
+            start()
+        }
     }
 }
