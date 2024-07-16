@@ -4,4 +4,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     // Se añade este para añadir kpt dagger
     id ("com.google.dagger.hilt.android") version "2.48" apply false
+    // Navegacion segura
+    id ("androidx.navigation.safeargs.kotlin") version "2.7.1" apply false
 }
