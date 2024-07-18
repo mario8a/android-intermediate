@@ -11,7 +11,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.navArgs
 import com.mario8a.myapplication.databinding.ActivityHoroscopeDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -28,10 +27,16 @@ class HoroscopeDetailActivity : AppCompatActivity() {
         binding = ActivityHoroscopeDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
+        horoscopeDetailViewModel.getHoroscope(args.type.name)
     }
 
     private fun initUI() {
+        initListeners()
         initUIState()
+    }
+
+    private fun initListeners() {
+        binding.ivBack.setOnClickListener {onBackPressedDispatcher.onBackPressed()}
     }
 
     private fun initUIState() {
@@ -41,7 +46,7 @@ class HoroscopeDetailActivity : AppCompatActivity() {
                     when(it) {
                         HoroscopeDetailState.Loading -> loadingState()
                         is HoroscopeDetailState.Error -> errorState()
-                        is HoroscopeDetailState.Success -> successState()
+                        is HoroscopeDetailState.Success -> successState(it)
                     }
                 }
             }
@@ -49,14 +54,16 @@ class HoroscopeDetailActivity : AppCompatActivity() {
     }
 
     private fun loadingState() {
-        TODO("Not yet implemented")
+        binding.pb.isVisible = true
     }
 
     private fun errorState() {
-
+        binding.pb.isVisible = false
     }
 
-    private fun successState() {
-
+    private fun successState(state: HoroscopeDetailState.Success) {
+        binding.pb.isVisible = false
+        binding.tvTitle.text = state.sign
+        binding.tvBody.text = state.prediction
     }
 }
