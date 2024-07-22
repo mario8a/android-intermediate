@@ -1,6 +1,8 @@
 package com.mario8a.myapplication.ui.luck
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +16,19 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.mario8a.myapplication.R
 import com.mario8a.myapplication.databinding.FragmentLuckBinding
+import com.mario8a.myapplication.ui.core.listeners.OnSwipeTouchListeners
+import com.mario8a.myapplication.ui.providers.RandomCardProvider
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LuckFragment : Fragment() {
     private var _biding: FragmentLuckBinding? = null
     private val binding get() = _biding!!
+
+    @Inject
+    lateinit var randomCardProvider: RandomCardProvider
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,11 +36,43 @@ class LuckFragment : Fragment() {
     }
 
     private fun initUI() {
+        preparePrediction()
         initListeners()
     }
 
+    private fun preparePrediction() {
+        val currentLuck = randomCardProvider.getLucky()
+        currentLuck?.let { luck ->
+            val currentPrediction = getString(luck.text)
+            binding.tvLucky.text = currentPrediction
+            binding.ivLuckyCard.setImageResource(luck.image)
+            binding.tvShare.setOnClickListener {shareResult(currentPrediction)}
+        }
+    }
+
+    private fun shareResult(prediction: String) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, prediction)
+            type = "text/plain"
+        }
+
+        val sharedIntent = Intent.createChooser(sendIntent, null)
+        startActivity(sharedIntent)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     private fun initListeners() {
-        binding.ivRulette.setOnClickListener { spinRoulette() }
+        // binding.ivRulette.setOnClickListener { spinRoulette() }
+        binding.ivRulette.setOnTouchListener(object : OnSwipeTouchListeners(requireContext()) {
+            override fun onSwipeRight() {
+                spinRoulette()
+            }
+
+            override fun onSwipeLeft() {
+                spinRoulette()
+            }
+        })
     }
 
     private fun spinRoulette() {
